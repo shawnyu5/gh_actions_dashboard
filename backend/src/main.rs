@@ -1,9 +1,9 @@
 mod github;
-use crate::github::auth::app_auth_token;
+// use crate::github::auth::app_auth_token;
 
 #[tokio::main]
 async fn main() {
-    let repos = github::workflow::get_all_org_repos("gh-action-dashboard-test")
+    let repos = github::workflow::get_all_user_repos("shawnyu5")
         .await
         .unwrap();
 
