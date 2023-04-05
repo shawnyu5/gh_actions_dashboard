@@ -5,6 +5,7 @@ use crate::routes::all_user_repos::user_repo;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::Header;
 use rocket::{Request, Response};
+use routes::workflow::workflow_runs;
 mod github;
 
 pub struct CORS;
@@ -31,5 +32,7 @@ impl Fairing for CORS {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().attach(CORS).mount("/", routes![user_repo])
+    rocket::build()
+        .attach(CORS)
+        .mount("/", routes![user_repo, workflow_runs])
 }

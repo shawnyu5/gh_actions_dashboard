@@ -1,5 +1,8 @@
 use anyhow::Result;
-use octocrab::{models::Repository, Octocrab, Page};
+use octocrab::{
+    models::{workflows::Run, Repository},
+    Octocrab, Page,
+};
 use reqwest::header::AUTHORIZATION;
 
 use super::auth::app_auth_token;
@@ -30,7 +33,23 @@ pub async fn get_all_user_repos(user_name: &str) -> Result<Vec<Repository>> {
         .send()
         .await?;
 
-    println!("{:?}", &res.headers());
     let json = res.json::<Vec<Repository>>().await?;
     return Ok(json);
+}
+
+/// list all workflow runs for a repo
+///
+/// * `repo`: the repository to list runs for
+pub async fn get_all_workflow_runs(repo_owner: &str, repo_name: &str) -> Result<Vec<Run>> {
+    let octocrab = Octocrab::builder()
+        .personal_token(app_auth_token().await.unwrap())
+        .build()
+        .unwrap();
+    let workflow_runs = octocrab
+        .workflows(repo_owner, repo_name)
+        .list_all_runs()
+        .send()
+        .await?;
+
+    return Ok(workflow_runs.into_iter().collect());
 }
