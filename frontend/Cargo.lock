@@ -258,6 +258,7 @@ dependencies = [
  "github-types",
  "log",
  "reqwest-wasm",
+ "serde",
  "serde_json",
  "wasm-bindgen",
  "wasm-bindgen-futures",
