@@ -1,5 +1,6 @@
 mod components;
 use crate::components::workflow::workflow::WorkflowRuns;
+use crate::components::workflow::workflow::WorkflowSuccessRate;
 use components::repos::Repos;
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -61,7 +62,12 @@ fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! { <Home /> },
         Route::Repos => html! { <Repos /> },
-        Route::WorkflowRuns => html! { <WorkflowRuns /> },
+        Route::WorkflowRuns => html! {
+            <>
+                <WorkflowRuns />
+                <WorkflowSuccessRate />
+            </>
+        },
     }
 }
 

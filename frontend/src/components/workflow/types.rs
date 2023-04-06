@@ -1,4 +1,24 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[allow(non_camel_case_types)]
+pub enum WorkflowRunConclusion {
+    cancelled,
+    failure,
+    success,
+}
+
+impl Display for WorkflowRunConclusion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            WorkflowRunConclusion::cancelled => write!(f, "cancelled"),
+            WorkflowRunConclusion::failure => write!(f, "failure"),
+            WorkflowRunConclusion::success => write!(f, "success"),
+        }
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -17,7 +37,7 @@ pub struct WorkflowRun {
     pub run_number: i64,
     pub event: String,
     pub status: String,
-    pub conclusion: String,
+    pub conclusion: WorkflowRunConclusion,
     #[serde(rename = "created_at")]
     pub created_at: String,
     #[serde(rename = "updated_at")]
