@@ -1,5 +1,5 @@
 {
-   "buildCommand": "trunk build --release",
+   "buildCommand": "rustup target add wasm32-unknown-unknown && trunk build --release",
    "outputDirectory": "dist",
    "rewrites": [
       {
