@@ -53,6 +53,8 @@ async fn get_repo_workflow_runs(repo: Repository) -> Option<Vec<WorkflowRun>> {
 #[function_component(WorkflowRuns)]
 /// get all the workflow runs for a user's repositories
 pub fn all_workflow_runs() -> Html {
+    let is_loading_state = use_state(|| false);
+
     // get all repos for a user
     let get_repos = async {
         let response = reqwest_wasm::get("http://localhost:8000/")
@@ -68,29 +70,33 @@ pub fn all_workflow_runs() -> Html {
         };
     };
 
+    let is_loading_state = is_loading_state.clone();
     // get the number of success and failed runs
-    let workflow_runs_handler: UseAsyncHandle<Vec<WorkflowRun>, String> = use_async(async move {
-        // contain all workflow runs
-        let mut workflow_runs: Vec<WorkflowRun> = Vec::new();
-        // get all repos for the current user
-        let repos: Vec<Repository> = get_repos.await.unwrap();
+    let workflow_runs_handler: UseAsyncHandle<Vec<WorkflowRun>, String> = {
+        let is_loading_state = is_loading_state.clone();
+        use_async(async move {
+            is_loading_state.set(true);
+            // contain all workflow runs
+            let mut workflow_runs: Vec<WorkflowRun> = Vec::new();
+            // get all repos for the current user
+            let repos: Vec<Repository> = get_repos.await.unwrap();
 
-        for repo in repos {
-            if let Some(mut runs) = get_repo_workflow_runs(repo.clone()).await {
-                workflow_runs.append(&mut runs);
-            } else {
-                debug!(
-                    "No workflow runs found for {:?}/{:?}",
-                    JsValue::from(repo.owner.login).as_string().unwrap(),
-                    JsValue::from(repo.name).as_string().unwrap()
-                )
-            };
-        }
-        // let success_run_len = status(&workflow_runs, WorkflowRunConclusion::success).len();
-        // let failure_run_len = status(&workflow_runs, WorkflowRunConclusion::failure).len();
+            for repo in repos {
+                if let Some(mut runs) = get_repo_workflow_runs(repo.clone()).await {
+                    workflow_runs.append(&mut runs);
+                } else {
+                    info!(
+                        "Error getting workflow runs found for {:?}/{:?}",
+                        JsValue::from(repo.owner.login).as_string().unwrap(),
+                        JsValue::from(repo.name).as_string().unwrap()
+                    );
+                };
+            }
 
-        return Ok(workflow_runs);
-    });
+            is_loading_state.set(false);
+            return Ok(workflow_runs);
+        })
+    };
 
     {
         let workflow_runs_handler = workflow_runs_handler.clone();
@@ -102,13 +108,11 @@ pub fn all_workflow_runs() -> Html {
             (),
         );
     }
-
-    if let Some(workflow) = &workflow_runs_handler.data {
+    if *is_loading_state {
+        html! {<div>{"Loading..."}</div>}
+    } else if let Some(workflow) = &workflow_runs_handler.data {
         html! {
                 <div>
-                    // <p>{"Success: "}{workflow.0}</p>
-                    // <p>{"failed: "}{workflow.1}</p>
-                    // <p>{"Success rate: "}{workflow.0 / (workflow.0 + workflow.1) * 100}{"%"}</p>
                     <tr>
                         <th>{"Repository"}</th>
                         <th>{"Job name"}</th>
@@ -118,7 +122,7 @@ pub fn all_workflow_runs() -> Html {
                     for workflow.iter().map(|w| {
                         html! {
                             <tr>
-                                <td>{&w.repository.name}</td>
+                                <td><a href={w.clone().repository.html_url}>{&w.repository.name}</a></td>
                                 <td>{&w.name}</td>
                                 <td>{&w.conclusion}</td>
                             </tr>
@@ -128,11 +132,12 @@ pub fn all_workflow_runs() -> Html {
                 </div>
         }
     } else {
-        html! {<div>{"Loading..."}</div>}
+        html! {<div>{"Error loading all workflows..."}</div>}
     }
 }
 
 #[function_component(WorkflowSuccessRate)]
+/// get the total number of success and failed workflow runs, and calculate the success percentage
 pub fn get_workflow_success_rate() -> Html {
     // get all repos for a user
     let get_repos = async {
@@ -196,6 +201,6 @@ pub fn get_workflow_success_rate() -> Html {
                 </div>
         }
     } else {
-        html! {<div>{"Loading..."}</div>}
+        html! {<div>{"Calculating..."}</div>}
     }
 }
