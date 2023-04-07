@@ -1,0 +1,15 @@
+{
+   "buildCommand": "trunk build --release",
+   "outputDirectory": "dist",
+   "functions": {
+      "frontend/**/*.rs": {
+         "runtime": "vercel-rust@4.0.0-beta.3"
+      }
+   },
+   "rewrites": [
+      {
+         "source": "/(.*)",
+         "destination": "/index.html"
+      }
+   ]
+}
