@@ -1,11 +1,15 @@
+use dotenv::dotenv;
 use github_app_auth::{GithubAuthParams, InstallationAccessToken};
 use reqwest::header::HeaderValue;
+use std::env;
 
 /// get a auth token for a installed github app
 // return a auth token
 pub async fn app_auth_token() -> Option<String> {
+    dotenv().ok();
     let pem_file =
-        std::fs::read_to_string("rust-gh-action-dashboard.2023-04-01.private-key.pem").unwrap();
+        std::fs::read_to_string(env::var("PEM_FILE").expect("PEM_FILE location to be set"))
+            .unwrap();
 
     // The token is mutable because the installation access token must be
     // periodically refreshed. See the `GithubAuthParams` documentation
@@ -13,8 +17,8 @@ pub async fn app_auth_token() -> Option<String> {
     let mut token = InstallationAccessToken::new(GithubAuthParams {
         user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36".into(),
         private_key: pem_file.into(),
-        app_id: 312828,
-        installation_id: 35962623,
+        app_id: env::var("APP_ID").unwrap().parse().expect("APP_ID should be a number"),
+        installation_id: env::var("INSTALLATION_ID").unwrap().parse().expect("INSTALLATION_ID should be a number"),
     })
     .await
     .expect("failed to get installation access token");

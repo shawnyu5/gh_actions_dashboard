@@ -12,3 +12,4 @@ tokio = { version = "1.27.0", features = ["rt", "macros", "io-util", "rt", "time
 octocrab = "0.19.0"
 anyhow = "1.0.70"
 rocket = { version = "=0.5.0-rc.3", features = ["json"] }
+dotenv = "0.15.0"

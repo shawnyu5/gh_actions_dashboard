@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate rocket;
+extern crate dotenv;
+use dotenv::dotenv;
 mod routes;
 use crate::routes::all_user_repos::user_repo;
 use rocket::fairing::{Fairing, Info, Kind};
@@ -32,6 +34,7 @@ impl Fairing for CORS {
 
 #[launch]
 fn rocket() -> _ {
+    dotenv().ok();
     rocket::build()
         .attach(CORS)
         .mount("/", routes![user_repo, workflow_runs])
