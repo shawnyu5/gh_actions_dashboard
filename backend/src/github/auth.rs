@@ -28,6 +28,7 @@ pub async fn app_auth_token() -> Option<String> {
     let header_value = HeaderValue::to_str(auth_token.unwrap());
 
     return match header_value {
+        // remove the token prefix
         Ok(value) => Some(value.to_string().replace("token ", "")),
         Err(_) => None,
     };
