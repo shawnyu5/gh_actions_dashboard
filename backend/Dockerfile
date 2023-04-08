@@ -18,6 +18,6 @@ WORKDIR /dashboard/
 COPY --from=build dashboard/target/release/gh_dashboard .
 
 ENV ROCKET_ADDRESS=0.0.0.0
-EXPOSE 8000
+EXPOSE 8001
 CMD ["./gh_dashboard"]
 
