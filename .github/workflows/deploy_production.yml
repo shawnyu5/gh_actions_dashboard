@@ -9,18 +9,25 @@ on:
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
+    container:
+      image: shawnyu5/rust-trunk
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-            toolchain: stable
-            override: true
-            # components: rustfmt, clippy
+      # - name: Install latest nightly
+      # uses: actions-rs/toolchain@v1
+      # with:
+      # toolchain: stable
+      # override: true
+      # # components: rustfmt, clippy
 
-      - name: install trunk
-        run: cd frontend && cargo install --locked trunk
+      # - name: install trunk
+      # run: cd frontend && cargo install --locked trunk
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
