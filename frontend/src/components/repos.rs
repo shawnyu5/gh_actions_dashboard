@@ -1,13 +1,16 @@
+use dotenv::dotenv;
 use github_types::Repository;
 use log::info;
+use std::env;
 use wasm_bindgen::JsValue;
 use yew::prelude::*;
 use yew_hooks::prelude::*;
 
 #[function_component(Repos)]
 pub fn all_repos() -> Html {
+    dotenv().ok();
     let repos: UseAsyncHandle<Vec<Repository>, String> = use_async(async move {
-        let response = reqwest_wasm::get("http://localhost:8000/")
+        let response = reqwest_wasm::get(env::var("API_ADDRESS").unwrap())
             .await
             .unwrap()
             .text()
