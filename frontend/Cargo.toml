@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 cached = {version = "0.42.0", features = ["wasm"]}
+dotenv = "0.15.0"
 github-types = "0.1.1"
 log = "0.4.17"
 reqwest-wasm = { version = "0.11.16", features = ["blocking"] }
