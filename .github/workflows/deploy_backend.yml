@@ -4,8 +4,8 @@ on:
     branches: ["master"]
 
 # concurrency:
-  # group: ${{ github.workflow }}-${{ github.ref }}
-  # cancel-in-progress: true
+# group: ${{ github.workflow }}-${{ github.ref }}
+# cancel-in-progress: true
 
 env:
   APP_ID: ${{ secrets.APP_ID }}
@@ -32,8 +32,8 @@ jobs:
           # echo -e "TOKEN=${{ secrets.DISCORD_TOKEN }}
           # DEVELOPMENT=false" > ./bot/.env
           touch ./backend/.env
-          docker compose build
-          docker compose push
+          docker compose build backend
+          docker compose push backend
 
   deploy:
     runs-on: ubuntu-latest
