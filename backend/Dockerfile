@@ -15,7 +15,8 @@ RUN cargo build --release
 FROM rust:1.67.1-slim-buster
 
 WORKDIR /dashboard/
-COPY --from=build dashboard/target/release/dashboard .
+COPY --from=build dashboard/target/release/gh_dashboard .
+COPY rust-gh-action-dashboard.2023-04-01.private-key.pem .
 
 ENV ROCKET_ADDRESS=0.0.0.0
 EXPOSE 8000
