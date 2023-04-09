@@ -1,9 +1,7 @@
-use std::env;
-
 use super::types::WorkflowRunConclusion;
 use crate::components::workflow::types::WorkflowRun;
+use crate::environment::enviroment::ENVIRONMENT;
 use cached::proc_macro::cached;
-use dotenv::dotenv;
 use github_types::Repository;
 use log::{debug, info};
 use wasm_bindgen::JsValue;
@@ -35,7 +33,6 @@ fn status(workflow_runs: &Vec<WorkflowRun>, conclusion: WorkflowRunConclusion) -
     convert = "{repo.clone().name}"
 )]
 async fn get_repo_workflow_runs(repo: Repository) -> Option<Vec<WorkflowRun>> {
-    dotenv().ok();
     info!(
         "Getting workflow runs for {:?}/{:?}",
         JsValue::from(&repo.owner.login).as_string().unwrap(),
@@ -44,9 +41,7 @@ async fn get_repo_workflow_runs(repo: Repository) -> Option<Vec<WorkflowRun>> {
 
     let response = reqwest_wasm::get(&format!(
         "{}/workflow_runs/{}/{}",
-        env::var("API_ADDRESS").unwrap(),
-        repo.owner.login,
-        repo.name
+        &ENVIRONMENT.api_address, repo.owner.login, repo.name
     ))
     .await
     .unwrap()
@@ -63,7 +58,7 @@ pub fn all_workflow_runs() -> Html {
 
     // get all repos for a user
     let get_repos = async {
-        let response = reqwest_wasm::get("http://localhost:8000/")
+        let response = reqwest_wasm::get(&ENVIRONMENT.api_address)
             .await
             .unwrap()
             .text()
@@ -145,10 +140,9 @@ pub fn all_workflow_runs() -> Html {
 #[function_component(WorkflowSuccessRate)]
 /// get the total number of success and failed workflow runs, and calculate the success percentage
 pub fn get_workflow_success_rate() -> Html {
-    dotenv().ok();
     // get all repos for a user
     let get_repos = async {
-        let response = reqwest_wasm::get(env::var("API_ADDRESS").unwrap())
+        let response = reqwest_wasm::get(&ENVIRONMENT.api_address)
             .await
             .unwrap()
             .text()
