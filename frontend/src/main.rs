@@ -20,7 +20,6 @@ enum Route {
 fn app() -> Html {
     html! {
         <>
-        <NavBar />
         <h1>{ "Home" }</h1>
         </>
     }
@@ -37,34 +36,56 @@ fn app() -> Html {
 
 #[function_component(NavBar)]
 fn nav_bar() -> Html {
-    let navigator = use_navigator().unwrap();
-
-    let go_to_repo = {
-        let navigator = navigator.clone();
-        let onclick = Callback::from(move |_| navigator.push(&Route::Repos));
-        html! { <button {onclick} >{ "Repos" }</button> }
-    };
-
-    let go_to_workflow_runs = {
-        let navigator = navigator.clone();
-        let onclick = Callback::from(move |_| navigator.push(&Route::WorkflowRuns));
-        html! { <button {onclick} >{ "Workflow Runs" }</button> }
-    };
-
     html! {
-    <>
-    {go_to_repo}
-    {go_to_workflow_runs}
-    </>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand">{"Navbar"}</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link active">
+              <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
+            </a>
+            <a class="nav-link">
+              <Link<Route> to={Route::Repos}>{ "Repos" }</Link<Route>>
+            </a>
+            <a class="nav-link">
+              <Link<Route> to={Route::WorkflowRuns}>{ "Workflow runs" }</Link<Route>>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
     }
 }
 
 fn switch(routes: Route) -> Html {
     match routes {
-        Route::Home => html! { <Home /> },
-        Route::Repos => html! { <Repos /> },
+        Route::Home => html! {
+            <>
+                <NavBar />
+                <Home />
+            </>
+        },
+        Route::Repos => html! {
+            <>
+                <NavBar />
+                <Repos />
+            </>
+        },
         Route::WorkflowRuns => html! {
             <>
+                <NavBar />
                 <WorkflowRuns />
                 <WorkflowSuccessRate />
             </>

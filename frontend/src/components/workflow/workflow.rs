@@ -72,7 +72,8 @@ pub fn all_workflow_runs() -> Html {
     };
 
     let is_loading_state = is_loading_state.clone();
-    // get the number of success and failed runs
+
+    // get all workflow runs for a repo
     let workflow_runs_handler: UseAsyncHandle<Vec<WorkflowRun>, String> = {
         let is_loading_state = is_loading_state.clone();
         use_async(async move {
@@ -113,23 +114,36 @@ pub fn all_workflow_runs() -> Html {
         html! {<div>{"Loading..."}</div>}
     } else if let Some(workflow) = &workflow_runs_handler.data {
         html! {
-                <div>
+                <div id="workflow-runs">
+                    <table class="table">
                     <tr>
                         <th>{"Repository"}</th>
                         <th>{"Job name"}</th>
                         <th>{"Status"}</th>
                     </tr>
-                {
-                    for workflow.iter().map(|w| {
-                        html! {
-                            <tr>
-                                <td><a href={w.clone().repository.html_url}>{&w.repository.name}</a></td>
-                                <td>{&w.name}</td>
-                                <td>{&w.conclusion}</td>
-                            </tr>
-                        }
-                    })
-                }
+                    {
+                        for workflow.iter().map(|w| {
+                            let table_class = {
+                                if w.conclusion == WorkflowRunConclusion::success {
+                                    "table-success"
+                                } else if w.conclusion == WorkflowRunConclusion::failure {
+                                    "table-danger"
+                                } else if w.conclusion == WorkflowRunConclusion::cancelled {
+                                    "table-light"
+                                } else {
+                                    ""
+                                }
+                            };
+                            html! {
+                                <tr style="background-color: green">
+                                    <td><a href={w.clone().repository.html_url}>{&w.repository.name}</a></td>
+                                    <td>{&w.name}</td>
+                                    <td>{&w.conclusion}</td>
+                                </tr>
+                            }
+                        })
+                    }
+                    </table>
                 </div>
         }
     } else {

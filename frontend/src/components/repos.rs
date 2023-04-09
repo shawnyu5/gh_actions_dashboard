@@ -1,5 +1,4 @@
 use crate::environment::enviroment::ENVIRONMENT;
-use dotenv::dotenv;
 use github_types::Repository;
 use log::info;
 use wasm_bindgen::JsValue;
