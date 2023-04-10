@@ -1,0 +1,26 @@
+# fly.toml file generated for gh-actions-dashboard-api on 2023-04-09T19:59:21-04:00
+
+app = "gh-actions-dashboard-api"
+kill_signal = "SIGINT"
+kill_timeout = 5
+mounts = []
+primary_region = "yyz"
+processes = []
+
+[[services]]
+  internal_port = 8000
+  processes = ["app"]
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
