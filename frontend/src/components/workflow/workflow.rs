@@ -209,7 +209,7 @@ pub fn get_workflow_success_rate() -> Html {
 
     if let Some(workflow) = &workflow_stats_handler.data {
         html! {
-                <div>
+                <div id="workflow-success-rate">
                     <p>{"Success: "}{workflow.0}</p>
                     <p>{"failed: "}{workflow.1}</p>
                     <p>{"Success rate: "}{workflow.2}{"%"}</p>

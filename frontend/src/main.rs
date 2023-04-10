@@ -28,9 +28,10 @@ fn app() -> Html {
 #[function_component(Router)]
 fn app() -> Html {
     html! {
-        <BrowserRouter>
-            <Switch<Route> render={switch} />
-        </BrowserRouter>
+            <BrowserRouter>
+                <NavBar />
+                <Switch<Route> render={switch} />
+            </BrowserRouter>
     }
 }
 
@@ -39,7 +40,7 @@ fn nav_bar() -> Html {
     html! {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand">{"Navbar"}</a>
+        <a class="navbar-brand">{"Github dashboard"}</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -72,20 +73,13 @@ fn nav_bar() -> Html {
 fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! {
-            <>
-                <NavBar />
-                <Home />
-            </>
+            <Home />
         },
         Route::Repos => html! {
-            <>
-                <NavBar />
-                <Repos />
-            </>
+            <Repos />
         },
         Route::WorkflowRuns => html! {
             <>
-                <NavBar />
                 <WorkflowRuns />
                 <WorkflowSuccessRate />
             </>
