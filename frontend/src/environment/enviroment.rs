@@ -14,6 +14,7 @@ lazy_static! {
 fn get_environment() -> Environment {
     dotenv().ok();
     return Environment {
-        api_address: std::env::var("API_ADDRESS").unwrap_or("http://161.35.8.80:8000".to_string()),
+        api_address: std::env::var("API_ADDRESS")
+            .unwrap_or("https://gh-actions-dashboard-api.fly.dev".to_string()),
     };
 }

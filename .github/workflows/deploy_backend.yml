@@ -1,53 +1,53 @@
-name: Deploy backend
-on:
-  push:
-    branches: ["master"]
+# name: Deploy backend
+# on:
+  # push:
+    # branches: ["master"]
 
-# concurrency:
-# group: ${{ github.workflow }}-${{ github.ref }}
-# cancel-in-progress: true
+# # concurrency:
+# # group: ${{ github.workflow }}-${{ github.ref }}
+# # cancel-in-progress: true
 
-env:
-  APP_ID: ${{ secrets.APP_ID }}
-  INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
+# env:
+  # APP_ID: ${{ secrets.APP_ID }}
+  # INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
 
-jobs:
-  dockerPush:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+# jobs:
+  # dockerPush:
+    # runs-on: ubuntu-latest
+    # permissions:
+      # contents: read
+      # packages: write
+    # steps:
+      # - name: Checkout repository
+        # uses: actions/checkout@v3
 
-      - name: Log into docker registry
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+      # - name: Log into docker registry
+        # uses: docker/login-action@v2
+        # with:
+          # username: ${{ secrets.DOCKER_USERNAME }}
+          # password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push Docker image
-        run: |
-          # echo -e "TOKEN=${{ secrets.DISCORD_TOKEN }}
-          # DEVELOPMENT=false" > ./bot/.env
-          touch ./backend/.env
-          docker compose build backend
-          docker compose push backend
+      # - name: Build and push Docker image
+        # run: |
+          # # echo -e "TOKEN=${{ secrets.DISCORD_TOKEN }}
+          # # DEVELOPMENT=false" > ./bot/.env
+          # touch ./backend/.env
+          # docker compose build backend
+          # docker compose push backend
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs:
-      - dockerPush
-    steps:
-      - name: Deploy app
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd gh_actions_dashboard
-            git pull
-            docker compose pull backend
-            docker compose up --remove-orphans -d backend
+  # deploy:
+    # runs-on: ubuntu-latest
+    # needs:
+      # - dockerPush
+    # steps:
+      # - name: Deploy app
+        # uses: appleboy/ssh-action@v0.1.8
+        # with:
+          # host: ${{ secrets.SSH_HOST }}
+          # username: ${{ secrets.SSH_USER }}
+          # key: ${{ secrets.SSH_KEY }}
+          # script: |
+            # cd gh_actions_dashboard
+            # git pull
+            # docker compose pull backend
+            # docker compose up --remove-orphans -d backend

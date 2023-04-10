@@ -125,17 +125,17 @@ pub fn all_workflow_runs() -> Html {
                         for workflow.iter().map(|w| {
                             let table_class = {
                                 if w.conclusion == WorkflowRunConclusion::success {
-                                    "table-success"
+                                    "background-color: #73ff85"
                                 } else if w.conclusion == WorkflowRunConclusion::failure {
-                                    "table-danger"
+                                    "background-color: #f56969"
                                 } else if w.conclusion == WorkflowRunConclusion::cancelled {
-                                    "table-light"
+                                    "background-color: #f5f25b"
                                 } else {
                                     ""
                                 }
                             };
                             html! {
-                                <tr style="background-color: green">
+                                <tr style={table_class}>
                                     <td><a href={w.clone().repository.html_url}>{&w.repository.name}</a></td>
                                     <td>{&w.name}</td>
                                     <td>{&w.conclusion}</td>
