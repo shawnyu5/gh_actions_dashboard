@@ -26,7 +26,8 @@ fn status(workflow_runs: &Vec<WorkflowRun>, conclusion: WorkflowRunConclusion) -
 /// * `repo`: the repository to get workflow runs of
 /// * return: the workflow runs of the repository
 #[cached(
-    time = 200,
+    // cache for 10 mins
+    time = 600,
     option = true,
     sync_writes = true,
     key = "String",
