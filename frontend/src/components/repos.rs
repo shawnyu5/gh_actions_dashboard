@@ -48,7 +48,7 @@ pub fn all_repos() -> Html {
                     <h1>{ "Repos" }</h1>
                     {
                         for repos.iter().map(|repo| {
-                            html! { <p><a href={ repo.clone().url }>{ &repo.name }</a></p> }
+                            html! { <p><a href={ repo.clone().html_url }>{ &repo.name }</a></p> }
                         })
                     }
                 </div>
