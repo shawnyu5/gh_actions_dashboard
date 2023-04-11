@@ -354,6 +354,7 @@ dependencies = [
  "cached",
  "dotenv",
  "github-types",
+ "gloo-timers",
  "log",
  "reqwest-wasm",
  "serde",

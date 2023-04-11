@@ -1,5 +1,5 @@
 use super::types::WorkflowRunConclusion;
-use crate::components::workflow::types::WorkflowRun;
+use crate::components::{workflow::types::WorkflowRun, counter::counter::Counter};
 use crate::environment::enviroment::ENVIRONMENT;
 use cached::proc_macro::cached;
 use github_types::Repository;
@@ -11,8 +11,6 @@ use yew_hooks::prelude::*;
 /// get all workflow runs with a status
 ///
 /// * workflow_runs: the workflow runs to filter
-/// * conclusion: the target conclusion state
-/// * return: the filtered workflow runs
 fn status(workflow_runs: &Vec<WorkflowRun>, conclusion: WorkflowRunConclusion) -> Vec<WorkflowRun> {
     return workflow_runs
         .to_owned()
@@ -112,7 +110,7 @@ pub fn all_workflow_runs() -> Html {
         );
     }
     if *is_loading_state {
-        html! {<div>{"Loading..."}</div>}
+        html! { <Counter title="Time passed: " increment=1 /> }
     } else if let Some(workflow) = &workflow_runs_handler.data {
         html! {
                 <div id="workflow-runs">
