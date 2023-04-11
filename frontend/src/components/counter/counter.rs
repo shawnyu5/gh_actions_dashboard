@@ -23,7 +23,6 @@ pub fn counter(props: &Props) -> Html {
             let counter = counter.clone();
             let timeout = Timeout::new(props.increment * 1000, move || {
                 counter.set(*counter.deref() + 1);
-                debug!("{:?}", JsValue::from("Incrementing counter"));
             });
             timeout.forget();
         }, counter);
