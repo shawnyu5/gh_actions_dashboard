@@ -38,6 +38,6 @@ fn rocket() -> _ {
     dotenv().ok();
     rocket::build()
         .attach(CORS)
-        .mount("/", routes![workflow_runs, all_org_repos])
+        .mount("/", routes![all_org_repos])
         .mount("/user", routes![user_repo, workflow_runs])
 }
