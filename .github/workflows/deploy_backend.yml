@@ -5,6 +5,7 @@ on:
       - master
     paths:
       - "backend/**"
+      - ".github/workflows/**"
 jobs:
   deploy:
     name: Deploy app
