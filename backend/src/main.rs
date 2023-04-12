@@ -3,6 +3,7 @@ extern crate rocket;
 extern crate dotenv;
 use dotenv::dotenv;
 mod routes;
+use crate::routes::org::all_org_repos;
 use crate::routes::repos::user_repo;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::Header;
@@ -37,6 +38,6 @@ fn rocket() -> _ {
     dotenv().ok();
     rocket::build()
         .attach(CORS)
-        .mount("/", routes![workflow_runs])
+        .mount("/", routes![workflow_runs, all_org_repos])
         .mount("/user", routes![user_repo, workflow_runs])
 }
