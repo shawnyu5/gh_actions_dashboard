@@ -1,7 +1,6 @@
 # fly.toml file generated for gh-actions-dashboard-api on 2023-04-09T19:59:21-04:00
 
 app = "gh-actions-dashboard-api"
-app_name = "gh-actions-dashboard-api"
 kill_signal = "SIGINT"
 kill_timeout = 5
 mounts = []
