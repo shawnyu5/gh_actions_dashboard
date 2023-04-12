@@ -1,5 +1,4 @@
 use cached::lazy_static::lazy_static;
-use dotenv::dotenv;
 
 pub struct Environment {
     pub api_address: String,

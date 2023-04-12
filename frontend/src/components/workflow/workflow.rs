@@ -1,5 +1,5 @@
 use super::types::WorkflowRunConclusion;
-use crate::components::{workflow::types::WorkflowRun, counter::counter::Counter};
+use crate::components::{counter::counter::Counter, workflow::types::WorkflowRun};
 use crate::environment::enviroment::ENVIRONMENT;
 use cached::proc_macro::cached;
 use github_types::Repository;
@@ -39,7 +39,7 @@ async fn get_repo_workflow_runs(repo: Repository) -> Option<Vec<WorkflowRun>> {
     );
 
     let response = reqwest_wasm::get(&format!(
-        "{}/workflow_runs/{}/{}",
+        "{}/user/workflow_runs/{}/{}",
         &ENVIRONMENT.api_address, repo.owner.login, repo.name
     ))
     .await
@@ -57,7 +57,7 @@ pub fn all_workflow_runs() -> Html {
 
     // get all repos for a user
     let get_repos = async {
-        let response = reqwest_wasm::get(&ENVIRONMENT.api_address)
+        let response = reqwest_wasm::get(format!("{}/user/repos", &ENVIRONMENT.api_address))
             .await
             .unwrap()
             .text()
@@ -155,7 +155,7 @@ pub fn all_workflow_runs() -> Html {
 pub fn get_workflow_success_rate() -> Html {
     // get all repos for a user
     let get_repos = async {
-        let response = reqwest_wasm::get(&ENVIRONMENT.api_address)
+        let response = reqwest_wasm::get(format!("{}/user/repos", &ENVIRONMENT.api_address))
             .await
             .unwrap()
             .text()
