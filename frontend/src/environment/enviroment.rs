@@ -12,9 +12,9 @@ lazy_static! {
 /// load all enviroment variables from .env
 /// return: Environment struct
 fn get_environment() -> Environment {
-    dotenv().ok();
+    // dotenv().unwrap();
     return Environment {
-        api_address: std::env::var("API_ADDRESS")
-            .unwrap_or("https://gh-actions-dashboard-api.fly.dev".to_string()),
+        api_address: std::env!("API_ADDRESS").to_string(),
     };
+    // .unwrap_or("https://gh-actions-dashboard-api.fly.dev".to_string()),
 }

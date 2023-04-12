@@ -8,7 +8,7 @@ use yew_hooks::prelude::*;
 #[function_component(Repos)]
 pub fn all_repos() -> Html {
     let repos: UseAsyncHandle<Vec<Repository>, String> = use_async(async move {
-        let response = reqwest_wasm::get(&ENVIRONMENT.api_address)
+        let response = reqwest_wasm::get(format!("{}/user/repos", &ENVIRONMENT.api_address))
             .await
             .unwrap()
             .text()
