@@ -1,4 +1,4 @@
-use crate::environment::enviroment::ENVIRONMENT;
+use crate::api_routes::routes::user_repos;
 use github_types::Repository;
 use log::info;
 use wasm_bindgen::JsValue;
@@ -8,7 +8,7 @@ use yew_hooks::prelude::*;
 /// get the user repo's parsed into text
 async fn get_user_repos_text() -> Result<String, reqwest_wasm::Error> {
     return Ok(
-        reqwest_wasm::get(format!("{}/user/repos", &ENVIRONMENT.api_address))
+        reqwest_wasm::get(user_repos())
             .await?
             .text()
             .await?,

@@ -1,4 +1,5 @@
 use super::types::WorkflowRunConclusion;
+use crate::api_routes::routes::{user_repos, user_workflow_runs};
 use crate::components::{counter::counter::Counter, workflow::types::WorkflowRun};
 use crate::environment::enviroment::ENVIRONMENT;
 use cached::proc_macro::cached;
@@ -38,15 +39,12 @@ async fn get_repo_workflow_runs(repo: Repository) -> Option<Vec<WorkflowRun>> {
         JsValue::from(&repo.name).as_string().unwrap()
     );
 
-    let response = reqwest_wasm::get(&format!(
-        "{}/user/workflow_runs/{}/{}",
-        &ENVIRONMENT.api_address, repo.owner.login, repo.name
-    ))
-    .await
-    .unwrap()
-    .text()
-    .await
-    .unwrap();
+    let response = reqwest_wasm::get(user_workflow_runs(repo.owner.login, repo.name))
+        .await
+        .unwrap()
+        .text()
+        .await
+        .unwrap();
     return serde_json::from_str::<Vec<WorkflowRun>>(&response).ok();
 }
 
@@ -57,7 +55,7 @@ pub fn all_workflow_runs() -> Html {
 
     // get all repos for a user
     let get_repos = async {
-        let response = reqwest_wasm::get(format!("{}/user/repos", &ENVIRONMENT.api_address))
+        let response = reqwest_wasm::get(user_repos())
             .await
             .unwrap()
             .text()
@@ -155,7 +153,7 @@ pub fn all_workflow_runs() -> Html {
 pub fn get_workflow_success_rate() -> Html {
     // get all repos for a user
     let get_repos = async {
-        let response = reqwest_wasm::get(format!("{}/user/repos", &ENVIRONMENT.api_address))
+        let response = reqwest_wasm::get(user_repos())
             .await
             .unwrap()
             .text()
