@@ -2,7 +2,6 @@ mod components;
 mod environment;
 mod api_routes;
 use crate::components::workflow::workflow::WorkflowRuns;
-use crate::components::workflow::workflow::WorkflowSuccessRate;
 use components::repos::Repos;
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -80,10 +79,10 @@ fn switch(routes: Route) -> Html {
             <Repos />
         },
         Route::WorkflowRuns => html! {
-            <>
-                <WorkflowRuns />
-                <WorkflowSuccessRate />
-            </>
+            // <>
+            <WorkflowRuns />
+                // <WorkflowSuccessRate />
+            // </>
         },
     }
 }
