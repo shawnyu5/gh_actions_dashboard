@@ -1,0 +1,29 @@
+[workspace]
+members = ["frontend", "backend"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# need to be applied only to wasm build
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 'z'
+
+[workspace.dependencies]
+leptos = { version = "0.3", default-features = false }
+leptos_meta = { version = "0.3", default-features = false }
+leptos_router = { version = "0.3", default-features = false, features = [
+  "csr",
+] }
+leptos_dom = { version = "0.3", default-features = false }
+leptos_axum = { version = "0.3" }
+
+# A leptos project defines which workspace members
+# that are used together frontend (lib) & server (bin)
+[[workspace.metadata.leptos]]
+name = "dashboard"
+bin-package = "backend"
+lib-package = "frontend"
+# assets-dir = "project1/assets"
+# style-file = "project1/css/main.scss"
+site-root = "target/site/dashboard"
