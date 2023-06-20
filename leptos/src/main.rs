@@ -20,8 +20,6 @@ async fn main() {
     let addr = leptos_options.site_addr;
     let routes = generate_route_list(|cx| view! { cx, <App/> }).await;
 
-    let _ = Home::register();
-
     // build our application with a route
     let app = Router::new()
         .route("/api/*fn_name", post(leptos_axum::handle_server_fns))
