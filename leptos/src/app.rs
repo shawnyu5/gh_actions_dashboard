@@ -33,10 +33,22 @@ pub fn App(cx: Scope) -> impl IntoView {
 fn HomePage(cx: Scope) -> impl IntoView {
     // Creates a reactive value to update the button
     let (count, set_count) = create_signal(cx, 0);
-    let on_click = move |_| set_count.update(|count| *count += 1);
+    let on_click = move |_| {
+        set_count.update(|count| *count += 1);
+        spawn_local(async move {
+            hello().await.unwrap();
+        });
+    };
 
     view! { cx,
         <h1>"Welcome to Leptos!"</h1>
         <button on:click=on_click>"Click Me: " {count}</button>
     }
+}
+
+#[server(Hello, "/api")]
+pub async fn hello() -> Result<String, ServerFnError> {
+    use backend::github::auth::*;
+    let auth_token = app_auth_token().await.unwrap();
+    Ok(auth_token)
 }

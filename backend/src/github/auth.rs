@@ -37,6 +37,10 @@ pub async fn app_auth_token() -> Option<String> {
     };
 }
 
+pub fn hello_world() {
+    println!("hello world");
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
