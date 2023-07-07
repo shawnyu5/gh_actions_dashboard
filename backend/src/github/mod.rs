@@ -1,3 +1,4 @@
 pub mod auth;
-pub mod workflow;
 pub mod org;
+pub mod repos;
+pub mod workflow;

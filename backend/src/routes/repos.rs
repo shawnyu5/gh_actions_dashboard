@@ -1,6 +1,7 @@
-use crate::github::workflow::get_all_user_repos;
 use octocrab::models::Repository;
 use rocket::serde::json::Json;
+
+use crate::github::repos::get_all_user_repos;
 
 #[get("/repos")]
 /// return all repos for a user
