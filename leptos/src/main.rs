@@ -1,12 +1,11 @@
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
-    use axum::{extract::Extension, routing::post, Router};
+    use axum::{routing::post, Router};
     use leptos::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use start_axum::app::*;
     use start_axum::fileserv::file_and_error_handler;
-    use std::sync::Arc;
 
     simple_logger::init_with_level(log::Level::Debug).expect("couldn't initialize logging");
 
@@ -23,11 +22,9 @@ async fn main() {
     // build our application with a route
     let app = Router::new()
         .route("/api/*fn_name", post(leptos_axum::handle_server_fns))
-        .leptos_routes(leptos_options.clone(), routes, |cx| view! { cx, <App/> })
+        .leptos_routes(&leptos_options, routes, |cx| view! { cx, <App/> })
         .fallback(file_and_error_handler)
-        .layer(Extension(Arc::new(leptos_options)));
-
-    _ = Hello::register();
+        .with_state(leptos_options);
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`

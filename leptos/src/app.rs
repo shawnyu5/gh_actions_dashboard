@@ -1,6 +1,7 @@
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
+use log::info;
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -36,7 +37,8 @@ fn HomePage(cx: Scope) -> impl IntoView {
     let on_click = move |_| {
         set_count.update(|count| *count += 1);
         spawn_local(async move {
-            hello().await.unwrap();
+            let repo = user_repos().await.unwrap();
+            info!("{}", repo);
         });
     };
 
@@ -46,9 +48,9 @@ fn HomePage(cx: Scope) -> impl IntoView {
     }
 }
 
-#[server(Hello, "/api")]
-pub async fn hello() -> Result<String, ServerFnError> {
-    use backend::github::auth::*;
-    let auth_token = app_auth_token().await.unwrap();
-    Ok(auth_token)
+#[server(Repos, "/api")]
+pub async fn user_repos() -> Result<String, ServerFnError> {
+    use backend::github::repos::*;
+    let repos = get_all_user_repos("shawnyu5").await.unwrap();
+    return Ok(format!("{:?}", repos[0]));
 }
