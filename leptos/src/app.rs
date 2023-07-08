@@ -1,7 +1,8 @@
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-use log::info;
+
+use crate::routes::{repo::Repos, workflow_run::WorkflowRun};
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -14,43 +15,19 @@ pub fn App(cx: Scope) -> impl IntoView {
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/start-axum.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous" />
+        // <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js" crossorigin="anonymous"></script>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="Github actions dashboard"/>
 
-        // content for this welcome page
         <Router>
             <main>
                 <Routes>
-                    <Route path="" view=|cx| view! { cx, <HomePage/> }/>
+                    <Route path="repos" view=|cx| view! { cx, <Repos/> }/>
+                    <Route path="workflow_run" view=|cx| view! { cx, <WorkflowRun repo_owner="shawnyu5".to_string() repo_name="gh-ac".to_string()/> }/>
                 </Routes>
             </main>
         </Router>
     }
-}
-
-/// Renders the home page of your application.
-#[component]
-fn HomePage(cx: Scope) -> impl IntoView {
-    // Creates a reactive value to update the button
-    let (count, set_count) = create_signal(cx, 0);
-    let on_click = move |_| {
-        set_count.update(|count| *count += 1);
-        spawn_local(async move {
-            let repo = user_repos().await.unwrap();
-            info!("{}", repo);
-        });
-    };
-
-    view! { cx,
-        <h1>"Welcome to Leptos!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
-    }
-}
-
-#[server(Repos, "/api")]
-pub async fn user_repos() -> Result<String, ServerFnError> {
-    use backend::github::repos::*;
-    let repos = get_all_user_repos("shawnyu5").await.unwrap();
-    return Ok(format!("{:?}", repos[0]));
 }

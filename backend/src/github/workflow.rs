@@ -13,6 +13,7 @@ pub async fn get_all_workflow_runs(repo_owner: &str, repo_name: &str) -> Result<
     let workflow_runs = octocrab
         .workflows(repo_owner, repo_name)
         .list_all_runs()
+        .per_page(50)
         .send()
         .await?;
 
