@@ -1,4 +1,5 @@
-use leptos::{tracing::info, *};
+use leptos::*;
+use leptos_router::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -14,10 +15,27 @@ pub struct Run {
     pub html_url: String,
 }
 
+// TODO: idk why this doesn't work
+// #[derive(Params, Copy, Clone, Debug, PartialEq, Eq)]
+// pub struct WorkflowRunParam {
+// owner: String,
+// name: String,
+// }
+
 #[component]
-pub fn WorkflowRun(cx: Scope, repo_owner: String, repo_name: String) -> impl IntoView {
+pub fn WorkflowRun(cx: Scope) -> impl IntoView {
+    let params = use_params_map(cx);
+    let repo_owner = params
+        .with(|params| params.get("owner").cloned())
+        .expect("owner route parameter");
+    let repo_name = params
+        .with(|params| params.get("name").cloned())
+        .expect("name route parameter");
+
     let (repo_owner, _) = create_signal(cx, repo_owner);
     let (repo_name, _) = create_signal(cx, repo_name);
+
+    // fetch workflow runs for a repo
     let fetch_runs: Resource<(), Vec<Run>> = create_resource(
         cx,
         move || (),
