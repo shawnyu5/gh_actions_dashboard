@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Repo {
     /// name of the repo
-    name: String,
+    pub name: String,
     /// url of the repo
-    url: String,
+    pub url: String,
 }
 /// Renders the home page of your application.
 #[component]
@@ -16,7 +16,7 @@ pub fn Repos(cx: Scope) -> impl IntoView {
         cx,
         move || (),
         |_| async move {
-            let repo = user_repos_names().await.unwrap();
+            let repo = user_repos_names("shawnyu5".to_string()).await.unwrap();
             info!("Loading resource...");
             return repo;
         },
@@ -45,9 +45,9 @@ pub fn Repos(cx: Scope) -> impl IntoView {
 
 /// A server function that returns a list of the user's repos names
 #[server(Repos, "/api")]
-pub async fn user_repos_names() -> Result<Vec<Repo>, ServerFnError> {
+pub async fn user_repos_names(user: String) -> Result<Vec<Repo>, ServerFnError> {
     use backend::github::repos::*;
-    let repos = match get_all_user_repos("shawnyu5").await {
+    let repos = match get_all_user_repos(&user).await {
         Ok(repos) => repos,
         Err(e) => return Err(ServerFnError::ServerError(format!("{:?}", e))),
     };
